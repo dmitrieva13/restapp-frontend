@@ -1,10 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
 import './style/App.css'
-// import Carousel from './PhotosCarousel'
-// import Buttons from './RestaurantButtons'
 import TopHolder from './TopHolderRest'
+import { Link, useParams } from 'react-router-dom';
+import LoadingPage from './LoadingPage'
+import Poster from './Poster';
+import Booking from './Booking';
+import InfoScreen from './InfoScreen';
+
 
 function RestaurantPage() {
+
+  let { restaurantId } = useParams();
+
 
   let infoArr = {
     mainImgs: ["first"],
@@ -76,26 +83,51 @@ Nam eget metus sed est tincidunt tincidunt eu eget purus. Etiam massa tortor, ve
     ]
   }
 
+
   const [fetched, fetchedSet] = useState(0)
   const [addess, addessSet] = useState("")
-  const [workingHours, workingHoursSet] = useState([])
-  const [contacts, contactsSet] = useState("")
-  const [descripton, descriptonSet] = useState("")
+  const [restaurantName, restaurantNameSet] = useState("")
+  const [mainScreen, mainScreenSet] = useState<any>(null)
+  const [screensArr, screensArrSet] = useState<any[]>([])
+  // const [workingHours, workingHoursSet] = useState([])
+  // const [contacts, contactsSet] = useState("")
+  // const [descripton, descriptonSet] = useState("")
 
   const [screen, screenSet] = useState(0)
   const [index, indexSet] = useState(0)
   const [imageNum, imageNumSet] = useState(0)
+  const [screenCount, screenCountSet] = useState(0)
 
-  const [guestName, guestNameSet] = useState("")
-  const [guestSurname, guestSurnameSet] = useState("")
-  const [bookedDate, bookedDateSet] = useState("")
-  const [bookedTime, bookedTimeSet] = useState("")
-  const [guestsNum, guestsNumSet] = useState("")
-  const [bookedComment, bookedCommntSet] = useState("")
+  const [loading, loadingSet] = useState(false)
+
+  // const [guestName, guestNameSet] = useState("")
+  // const [guestSurname, guestSurnameSet] = useState("")
+  // const [bookedDate, bookedDateSet] = useState("")
+  // const [bookedTime, bookedTimeSet] = useState("")
+  // const [guestsNum, guestsNumSet] = useState("")
+  // const [bookedComment, bookedCommntSet] = useState("")
 
   const [todaysDate, todaysDateSet] = useState("")
+  const [isMainScreen, isMainScreenSet] = useState(0)
+
+  const [imageId, imageIdSet] = useState(0)
+
+
+  let underlineTitle = (targetId: string) => {
+    let titleDivs = Array.from(document.querySelectorAll(".title"))
+    titleDivs.map((title: any, i: number) => {
+      if (title.id == targetId) {
+        title.className = "title selected"
+      } else {
+          title.className = "title"
+        }
+      }
+    )
+  }
 
   let setActiveDots = (i: string) => {
+    console.log("from rest");
+    
     let dots = document.querySelectorAll(".dot")
     dots.forEach(d => {
       let dotID = d.id
@@ -107,40 +139,11 @@ Nam eget metus sed est tincidunt tincidunt eu eget purus. Etiam massa tortor, ve
     })
   }
 
-  useEffect(() => {
-    if(!fetched) {
-      fetch("https://restapp.onrender.com/restaurant", {
-          method: "POST",
-          body: JSON.stringify({restaurant_id: "1"}),
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
-      }).then(res=>res.json())
-      .then(response=>{
-
-        // addessSet(response.restaurant.address)
-        // contactsSet(response.restaurant.contacts)
-        // descriptonSet(response.restaurant.description)
-
-        // let wh = response.restaurant.working_hours
-        // workingHoursSet(wh.split("\n"))
-
-        fetchedSet(1)
-      })
-      .catch(error=>{console.log(error)})
-
-      let date = new Date()
-      let day = date.getDate();
-      let month = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1).toString() : "0"+(date.getMonth() + 1);
-      let year = date.getFullYear();
-      let dateStr = `${year}-${month}-${day}`
-      todaysDateSet(dateStr)
-
-      let loading = false;
-      let screenNumber = 0;
-      let scroll = (e: any) => {
-        if (e.target.className == 'textBlock' && 
+  // let loading = false;
+      // let screenNumber = 0;
+      let scrolling = (e: any) => {
+        console.log("target: " + screen)
+        if (e.target.className === 'textBlock' && 
             e.target.scrollHeight > e.target.offsetHeight && 
             ((e.target.scrollTop > 0 && e.deltaY < 0) ||
               (e.target.scrollHeight - e.target.scrollTop - 
@@ -148,20 +151,33 @@ Nam eget metus sed est tincidunt tincidunt eu eget purus. Etiam massa tortor, ve
           return
         }
         if (!loading) {
-          console.log("target: ", e.target)
+          let screenNumber = screen
+          console.log(screenNumber)
           if (e.deltaY > 0) {
             // scrolling down
-            if (screenNumber < 4) {
-              console.log(screenNumber)
+            if (screenNumber < screenCount) {
+              // console.log(screenNumber)
               ++screenNumber;
+              let dotsClass = document.querySelector(".welcomeDots")
+              if (dotsClass != null) {
+                dotsClass.className += " invisible"
+              }
+              // screenSet(screen + 1)
             }
           } else {
             // scrolling up
             if (screenNumber != 0) {
+              // screenSet(screen-1)
               --screenNumber;
+              if (screenNumber == 0) {
+                let dotsClass = document.querySelector(".welcomeDots")
+                  if (dotsClass != null) {
+                    dotsClass.className = "welcomeDots dots"
+                  }
+              }
             }
           }
-          screenSet(screenNumber)
+          // screenSet(screenNumber)
           // indexSet(0)
           // imageNumSet(0)
           // setTimeout(function(){
@@ -170,22 +186,130 @@ Nam eget metus sed est tincidunt tincidunt eu eget purus. Etiam massa tortor, ve
           //   imageNumSet(0)
           // }, 1000)
 
+          indexSet(0)
           setTimeout(function(){
-            // console.log(scrolling)
-            indexSet(0)
-            imageNumSet(0)
+            // console.log(scrolling
+            // imageNumSet(0)
+            imageIdSet(0)
             setActiveDots('0')
           }, 1000)
 
-          loading = true
+          loadingSet(true)
+          screenSet(screenNumber)
           setTimeout(function(){
             // console.log(scrolling)
-            loading = false
+            loadingSet(false)
           }, 1000)
+
+          let idStr = (screenNumber - isMainScreen - 1) + ".0"
+          underlineTitle(idStr)
         }
       }
-      document.querySelector(".App")?.addEventListener('wheel', scroll)
 
+  useEffect(() => {
+    if(!fetched) {
+      // fetchedSet(1)
+      fetch("https://restapp.onrender.com/restaurant", {
+          method: "POST",
+          body: JSON.stringify({restaurant_id: restaurantId}),
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+      }
+      ).then(res=>res.json())
+      .then(response=>{
+
+        fetchedSet(1)
+        restaurantNameSet(response.name)
+        // mainScreenSet(response.screens.filtering)
+        response.screens.map((scr: any) => {
+          if (scr.type == "main") {
+            mainScreenSet(scr)
+            isMainScreenSet(1)
+          }
+        })
+        console.log("FIRING")
+
+        screensArrSet(response.screens)
+        screenCountSet(response.screens.length)
+        // response.screens.map((screen: any) => {
+        //   if (screen.type == "description") {
+        //     screensArr.push(screen)
+        //   }
+        // })
+        // console.log(screensArr)
+
+        console.log(response)
+        // addessSet(response.restaurant.address)
+        // contactsSet(response.restaurant.contacts)
+        // descriptonSet(response.restaurant.description)
+
+        // let wh = response.restaurant.working_hours
+        // workingHoursSet(wh.split("\n"))
+      })
+      .catch(error=>{console.log(error)})
+
+      let date = new Date()
+      let day = date.getDate() >= 10 ? date.getDate().toString() : "0" + date.getDate()
+      let month = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1).toString() : "0"+(date.getMonth() + 1);
+      let year = date.getFullYear();
+      let dateStr = `${year}-${month}-${day}`
+      todaysDateSet(dateStr)
+      console.log(todaysDate)
+
+      // let loading = false;
+      // let screenNumber = 0;
+      // let scroll = (e: any) => {
+      //   console.log("target: " + e.target)
+      //   if (e.target.className == 'textBlock' && 
+      //       e.target.scrollHeight > e.target.offsetHeight && 
+      //       ((e.target.scrollTop > 0 && e.deltaY < 0) ||
+      //         (e.target.scrollHeight - e.target.scrollTop - 
+      //         e.target.clientHeight > 1 && e.deltaY > 0))) {
+      //     return
+      //   }
+      //   if (!loading) {
+      //     console.log("in scroll")
+      //     if (e.deltaY > 0) {
+      //       // scrolling down
+      //       if (screenNumber < 4) {
+      //         // console.log(screenNumber)
+      //         ++screenNumber;
+      //       }
+      //     } else {
+      //       // scrolling up
+      //       if (screenNumber != 0) {
+      //         --screenNumber;
+      //       }
+      //     }
+      //     screenSet(screenNumber)
+      //     // indexSet(0)
+      //     // imageNumSet(0)
+      //     // setTimeout(function(){
+      //     //   // console.log(scrolling)
+      //     //   indexSet(0)
+      //     //   imageNumSet(0)
+      //     // }, 1000)
+
+      //     setTimeout(function(){
+      //       // console.log(scrolling)
+      //       indexSet(0)
+      //       imageNumSet(0)
+      //       setActiveDots('0')
+      //     }, 1000)
+
+      //     loading = true
+      //     setTimeout(function(){
+      //       // console.log(scrolling)
+      //       loading = false
+      //     }, 1000)
+      //   }
+      // }
+      // document.querySelector(".App")?.addEventListener('wheel', scroll)
+      // console.log(document.querySelector(".App"))
+
+      // ).catch(error=>{console.log(error)})
       // let textIndexChange = (e: any) => {
       //   let id = e.target.id
       //   let indexes = id.split(".")
@@ -233,14 +357,18 @@ Nam eget metus sed est tincidunt tincidunt eu eget purus. Etiam massa tortor, ve
   let textIndexChange = (e: any) => {
     let id = e.target.id
     let indexes = id.split(".")
-    imageNumSet(0)
+    // imageNumSet(0)
+    imageIdSet(0)
     setTimeout(function(){
       // console.log(scrolling)
+      console.log(id);
+      
       indexSet(indexes.at(1))
       setActiveDots('0')
     }, 200)
+    underlineTitle(id)
     //indexSet(indexes.at(1))
-    console.log(infoArr)
+    // console.log(infoArr)
   }
 
   let imageIndexChange = (e: any) => {
@@ -261,207 +389,111 @@ Nam eget metus sed est tincidunt tincidunt eu eget purus. Etiam massa tortor, ve
     }, 200)
   }
 
-  let setError = (inputName: string) => {
-    let input = document.querySelector("."+inputName)
-    console.log(input)
-    if (input != null) {
-      input.className += " invalid"
-      input.addEventListener("click", e => {
-        let found = document.querySelector("."+inputName)
-        if (found != null) {
-          found.className = inputName
-        }
-      })
-    }
-  }
+  // let setError = (inputName: string) => {
+  //   let input = document.querySelector("."+inputName)
+  //   // console.log(input)
+  //   if (input != null) {
+  //     input.className += " invalid"
+  //     input.addEventListener("click", e => {
+  //       let found = document.querySelector("."+inputName)
+  //       if (found != null) {
+  //         found.className = inputName
+  //       }
+  //     })
+  //   }
+  // }
 
-  let makeVisisble = (className: string) => {
-    let divClass = document.querySelector("." + className)
-    if (divClass != null) {
-      divClass.className = className
-    }
-  }
+  // let makeVisisble = (className: string) => {
+  //   let divClass = document.querySelector("." + className)
+  //   if (divClass != null) {
+  //     divClass.className = className
+  //   }
+  // }
 
-  let makeInvisisble = (className: string) => {
-    let divClass = document.querySelector("." + className)
-    if (divClass != null) {
-      divClass.className += " invisible"
-    }
-  }
+  // let makeInvisisble = (className: string) => {
+  //   let divClass = document.querySelector("." + className)
+  //   if (divClass != null) {
+  //     divClass.className += " invisible"
+  //   }
+  // }
 
-  let sendBooking = () => {
-    let success = true
-    let bookingJSON = {
-      "name": guestName,
-      "surname": guestSurname,
-      "date": bookedDate,
-      "time": bookedTime,
-      "guestsNum": guestsNum,
-      "comment": bookedComment
-    }
-    if (bookingJSON.name.length < 1) {
-      success = false
-      setError("nameInput")
-    }
-    if (bookingJSON.surname.length < 1) {
-      success = false
-      setError("surnameInput")
-    }
-    if (bookingJSON.date.length < 1) {
-      success = false
-      setError("dateInput")
-    }
-    if (bookingJSON.time.length < 1) {
-      success = false
-      setError("timeInput")
-    }
-    if (bookingJSON.guestsNum.length < 1) {
-      success = false
-      setError("guestsInput")
-    }
-    if (!success) {
-      return
-    }
-    makeInvisisble("bookingFormBlock")
-    makeVisisble("bookingSuccessBlock")
-    setTimeout(function(){
-      makeVisisble("bookingFormBlock")
-      makeInvisisble("bookingSuccessBlock")
-    }, 2000)
-    guestNameSet("")
-    guestSurnameSet("")
-    bookedDateSet("")
-    bookedTimeSet("")
-    guestsNumSet("")
-    bookedCommntSet("")
-  }
+  // let sendBooking = () => {
+  //   let success = true
+  //   let bookingJSON = {
+  //     "name": guestName,
+  //     "surname": guestSurname,
+  //     "date": bookedDate,
+  //     "time": bookedTime,
+  //     "guestsNum": guestsNum,
+  //     "comment": bookedComment
+  //   }
+  //   if (bookingJSON.name.length < 1) {
+  //     success = false
+  //     setError("nameInput")
+  //   }
+  //   if (bookingJSON.surname.length < 1) {
+  //     success = false
+  //     setError("surnameInput")
+  //   }
+  //   if (bookingJSON.date.length < 1) {
+  //     success = false
+  //     setError("dateInput")
+  //   }
+  //   if (bookingJSON.time.length < 1) {
+  //     success = false
+  //     setError("timeInput")
+  //   }
+  //   if (bookingJSON.guestsNum.length < 1) {
+  //     success = false
+  //     setError("guestsInput")
+  //   }
+  //   if (!success) {
+  //     return
+  //   }
+  //   makeInvisisble("bookingFormBlock")
+  //   makeVisisble("bookingSuccessBlock")
+  //   setTimeout(function(){
+  //     makeVisisble("bookingFormBlock")
+  //     makeInvisisble("bookingSuccessBlock")
+  //   }, 2000)
+  //   guestNameSet("")
+  //   guestSurnameSet("")
+  //   bookedDateSet("")
+  //   bookedTimeSet("")
+  //   guestsNumSet("")
+  //   bookedCommntSet("")
+  // }
 
-
+  if(fetched){
   return (
-    <div className='App'>
-      <div className="welcomeImages" style={{marginTop: `-${100*screen}vh`}}>
+    <div className='App' onWheel={scrolling}>
+      {mainScreen != null &&
+      <Poster imgArr={mainScreen.info.at(0).images} screen={screen} />
+      
+  }
+      <TopHolder name={restaurantName} user={localStorage.getItem("username") || ""} />
 
-      </div>
-      <TopHolder name={infoArr.mainInfo.name} />
+      <Booking />
+      
 
-      <div className="screen">
-        <div className="textInfo">
-          <div className="titlesBlock">
-            <div className="title" style={{cursor: 'default'}}>Бронирование</div>
-          </div>
-          <div className="bookingSuccessBlock invisible">
-            <div className="successText">
-              Ваше бронирование отправлено в ресторан!
-            </div>
-          </div>
-          <div className="bookingFormBlock">
-            <div className="namesBlock">
-              <div className="nameBlock">
-                <input className="nameInput" type="text" maxLength={50} value={guestName} 
-                onChange={e => guestNameSet(e.target.value)}></input>
-                <div className="inputText">Имя</div>
-              </div>
-              <div className="surnameBlock">
-                <input className="surnameInput" type="text" maxLength={50} value={guestSurname} 
-                onChange={e => guestSurnameSet(e.target.value)}></input>
-                <div className="inputText">Фамилия</div>
-              </div>
-            </div>
-            <div className="timesBlock">
-              <div className="datetimeBlock">
-                <input className="dateInput" type="date" value={bookedDate} min={todaysDate}
-                onChange={e => bookedDateSet(e.target.value)}></input>
-                <input className="timeInput" type="time" value={bookedTime} 
-                onChange={e => bookedTimeSet(e.target.value)}></input>
-              </div>
-              <div className="inputText">Дата и время</div>
-            </div>
-            <div className="guestsBlock">
-              <input className="guestsInput" type="text" value={guestsNum} onChange={event => {
-                guestsNumSet(event.target.value.replace(/[^0-9]/,''))
-                }}/>
-              <div className="inputText">Количество гостей</div>
-            </div>
-            <div className="commentBlock">
-              <input type="text" maxLength={100} value={bookedComment} 
-                onChange={e => bookedCommntSet(e.target.value)}></input>
-              <div className="inputText">Комментарий к брони</div>
-            </div>
-            <div className="booking">
-            <div className="bookingButton" onClick={sendBooking}>ЗАБРОНИРОВАТЬ</div></div>
-          </div>
-        </div>
-        <div className="imagesBlock">
-          <div className="image">
-            {infoArr.bookingImgs.at(imageNum)}
-          </div>
-          <div className="dots">
-            {infoArr.bookingImgs.map((image, i) => {
-              // console.log("l ",infoArr.screens.at(screen - 1)?.info.at(index)?.images.length || 0)
-              if (infoArr.bookingImgs) {
-                if ((infoArr.bookingImgs.length || 0) < 2)
-                return
-              }
-              let idStr = i.toString()
-              console.log(idStr)
-              return(
-                <div id={idStr} className={i === 0 ? "dot active" : "dot"} 
-                key={i} onClick={imageIndexChange}> </div>
-              )
-            })}
-          </div>
-        </div>
-      </div>
-
-      {infoArr.screens.map((inform, indexScreen) => {
-        console.log("screen: ", indexScreen)
+      {screensArr != null &&
+      screensArr.map((inform, indexScreen) => {
+        if (inform.type != "main") {
+        console.log("screen: ", inform.info.at(index), "i: ", index)
         return(
-        <div className="screen" key={indexScreen}>
-        <div className="textInfo">
-          <div className="titlesBlock">
-            {infoArr.screens.at(indexScreen)?.info.map((titles, index) => {
-              let idStr = (indexScreen) + "." + index
-              return(
-                <div id={idStr} className="title" key={index} onClick={textIndexChange}>
-                  {infoArr.screens.at(indexScreen)?.info.at(index)?.title}
-                </div>
-              )
-            })}
-            {/* <div id="0.0" className="title">
-              {infoArr.screens.at(0)?.info.at(0)?.title}
-            </div>
-            <div id="0.1" className="title">
-              {infoArr.screens.at(0)?.info.at(1)?.title}
-            </div> */}
-          </div>
-          <div className="textBlock">
-            {infoArr.screens.at(indexScreen)?.info.at(index)?.text}
-          </div>
-        </div>
-        <div className="imagesBlock">
-          <div className="image">
-            {infoArr.screens.at(indexScreen)?.info.at(index)?.images?.at(imageNum)}
-          </div>
-          <div className="dots">
-            {infoArr.screens.at(indexScreen)?.info.at(index)?.images.map((image, i) => {
-              // console.log("l ",infoArr.screens.at(screen - 1)?.info.at(index)?.images.length || 0)
-              if (infoArr.screens.at(indexScreen)?.info.at(index)?.images) {
-                if ((infoArr.screens.at(indexScreen)?.info.at(index)?.images.length || 0) < 2)
-                return
-              }
-              let idStr = i.toString()
-              console.log(idStr)
-              return(
-                <div id={idStr} className={i === 0 ? "dot active" : "dot"} 
-                key={i} onClick={imageIndexChange}> </div>
-              )
-            })}
-          </div>
-        </div>
-      </div>)})}
+          <InfoScreen inform={inform} isMain={isMainScreen} index={index} 
+          indexScreen={indexScreen} screen={screen} textIndexChange={textIndexChange} 
+          imageID={imageId} imageIDSet={imageIdSet}/>
+   
+    )}})}
 
     </div>
   )
+  } else {
+    return(
+      <LoadingPage />
+    )
+  }
 }
 
 export default RestaurantPage

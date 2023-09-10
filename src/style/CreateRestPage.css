@@ -1,0 +1,211 @@
+.CreateRest {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.CreateRestPage {
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    display: flex;
+    flex-direction: row;
+}
+
+input[type=text] {
+    min-width: 50px;
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid rgb(200, 200, 200);
+    background-color:white;
+    font-weight: bolder;
+    transition-duration: 0.3s;
+  }
+  
+  input[type=text]:focus {
+    border: none;
+    border-bottom: 2px solid rgb(40, 40, 40);
+  }
+
+  button {
+    background-color: white;
+    width: fit-content;
+    border: 1px solid;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition-duration: 0.5s;
+  }
+
+  button:hover {
+    box-shadow: 0px 0px 3px 3px rgba(90, 90, 90, 0.15);
+  }
+
+.createRestInfoBlock {
+  width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    row-gap: 25px;
+    margin-top: 30px;
+    /* margin-right: 50px; */
+    border-right: solid 2px rgb(40, 40, 40);
+    box-shadow: 6px 0 4px -4px rgba(7, 7, 7, 0.2);
+}
+
+.createRestTextBlock {
+    width: 180px;
+    /* background-color: blueviolet; */
+}
+
+.createRestName, .createRestId, .createRestAddress, .createRestContacts, .createRestWH, .createRestDescription {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    /* background-color: cadetblue; */
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.IdInputBlock {
+    width: 100%;
+}
+
+.smallTextBlock {
+    color: rgb(150, 150, 150);
+    font-size: 14px;
+    font-weight: lighter;
+    padding: 2px;
+    cursor: default;
+  }
+
+  .triangleBlock {
+    width: 0px;
+   height: 0px;
+   border-style: solid;
+   border-width: 15px 0 15px 26.0px;
+   border-color: transparent transparent transparent rgb(40, 40, 40);
+   transform: rotate(0deg);
+  }
+
+  .createRestScreensBlock {
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+  }
+
+  .createScreenText {
+    margin-left: 20px;
+    height: 20px;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+
+  .invisible {
+    display: none;
+  }
+
+  .NewScreen {
+    flex-grow: 2;
+  }
+
+  .createButtonHolder {
+    width: 100%;
+    text-align: center;
+  }
+
+  .Error, .Empty {
+    color: red;
+  }
+
+  .createdSuccesfullyBlock {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  }
+
+  .successText {
+    font-size: 32px;
+  }
+
+  .WorkingHoursBlock {
+    width: 100%;
+  }
+
+  .workingHours {
+    width: 90%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    margin-bottom: 10px;
+    margin-right: 16px;
+  }
+
+  .weekdayText {
+    font-weight: lighter;
+    width: 150px;
+  }
+
+  .helpIconBlock {
+    text-align: right;
+    padding-right: 30px;
+  }
+
+  .helpButton {
+    margin-top: 20px;
+    color: white;
+    background-color: rgb(100, 100, 100);
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 16px;
+  }
+
+  .helpWindow {
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    /* display: none; */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  .helpContent {
+    background-color: white;
+    margin: 10% auto; 
+    padding: 20px;
+    width: 80%;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .closeButton {
+    border: none;
+    font-size: 18px;
+    align-self:flex-end;
+    height: 25px;
+  }
+
+  .closeButton:hover {
+    box-shadow: none;
+    font-weight: bolder;
+  }
+
+  .helpText {
+    justify-self: center;
+    padding-bottom: 20px;
+  }
