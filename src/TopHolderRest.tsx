@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './style/TopHolderRest.css'
 
-function TopHolder(props: {name: string, user: string}) {
+function TopHolder(props: {name: string, id: string, user: string}) {
   const navigate = useNavigate()
 
   let goToPath = () => {
@@ -17,11 +17,19 @@ function TopHolder(props: {name: string, user: string}) {
     navigate("/login")
   }
 
+  let goToEdit = () => {
+    navigate("/edit/" + props.id)
+  }
+
 if (props.user) {
   return (
     <div className='topBlock'>
-        <div className="restaurantName" onClick={goToPath}>
-            {props.name}
+      <div className="titleBlock">
+          <div className="restaurantName" onClick={goToPath}>
+              {props.name}
+          </div>
+
+          <button className="editButton" onClick={goToEdit}>редактировать ресторан</button>
         </div>
         <div className="userRest" onClick={goToUser}>{props.user}</div>
     </div>

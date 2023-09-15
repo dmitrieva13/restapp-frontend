@@ -471,7 +471,7 @@ Nam eget metus sed est tincidunt tincidunt eu eget purus. Etiam massa tortor, ve
       <Poster imgArr={mainScreen.info.at(0).images} screen={screen} />
       
   }
-      <TopHolder name={restaurantName} user={localStorage.getItem("username") || ""} />
+      <TopHolder name={restaurantName} id={restaurantId != null ? restaurantId : ""} user={localStorage.getItem("username") || ""} />
 
       <Booking />
       

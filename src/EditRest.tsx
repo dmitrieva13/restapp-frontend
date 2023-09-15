@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom';
 import './style/CreateRestPage.css'
 import NewScreen from './NewScreen'
-import TopHolderBasic from './TopHolderBasic'
+import TopHolderBasic from './TopHolderBasic';
 
-function CreateRestPage() {
+function EditRest() {
 //   const navigate = useNavigate()
 
 //   let goToUser = () => {
@@ -16,41 +17,114 @@ function CreateRestPage() {
     }
 
     const emptyScreen = {
-        titles: [],
-        texts: [],
-        images: []
+        titles: [] as any,
+        texts: [] as any,
+        images: [] as any
     }
 
+    let { restaurantId } = useParams();
+
     const [restaurantName, restaurantNameSet] = useState("")
-    const [restaurantId, restaurantIdSet] = useState("")
+    const [restaurantID, restaurantIDSet] = useState("")
     const [screens, screensSet] = useState<any[5]>([emptyScreen,emptyScreen,emptyScreen,emptyScreen,emptyScreen])
     const [scrIndex, scrIndexSet] = useState(-1)
     const [colors, colorsSet] = useState<any[5]>(["rgb(100, 100, 100)","rgb(100, 100, 100)", "rgb(100, 100, 100)", "rgb(100, 100, 100)", "rgb(100, 100, 100)"])
     const [screensVisible, screensVisibleSet] = useState(1)
     const [fetched, fetchedSet] = useState(0)
     const [workingHours, workingHoursSet] = useState("")
-    // const [workingHours, workingHoursSet] = useState<any[7]>(['','','','','','',''])
     const [address, addressSet] = useState('')
     const [contacts, contactsSet] = useState('')
     const [description, descriptionSet] = useState('')
     const [mainImages, mainImagesSet] = useState<any[3]>(['','',''])
     const [loaded, loadedSet] = useState(false)
 
-    // const weekdays = ['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье']
+    const weekdays = ['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье']
 
     useEffect(() => {
-        if (!loaded) {
-            restaurantNameSet("")
-            restaurantIdSet("")
-            addressSet("")
-            contactsSet("")
-            descriptionSet("")
-            workingHoursSet("")
-            screensSet([emptyScreen,emptyScreen,emptyScreen,emptyScreen,emptyScreen])
-            
-            loadedSet(true)
+        if(!fetched) {
+            // fetchedSet(1)
+            fetch("https://restapp.onrender.com/restaurant", {
+                method: "POST",
+                body: JSON.stringify({restaurant_id: restaurantId}),
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                }
+            }
+            ).then(res=>res.json())
+            .then(response=>{
+      
+              fetchedSet(1)
+              restaurantNameSet(response.name)
+              restaurantIDSet(restaurantId != null ? restaurantId : "")
+              addressSet(response.address)
+              contactsSet(response.contacts)
+              descriptionSet(response.description)
+              let whArr = response.working_hours.split('\n')
+              let whFormatted = ''
+              whArr.map((wh: any, i: number) => {
+                whFormatted += i == 0 ? wh : '\\n' + wh
+              })
+              workingHoursSet(whFormatted)
+              
+              let mainImgs = ['','','']
+              let screenArr = [emptyScreen,emptyScreen,emptyScreen,emptyScreen,emptyScreen]
+              response.screens.map((scr: any, i: number) => {
+                if (scr.type == "main") {
+                    console.log("main", scr.info[0].images)
+                    if (scr.info[0].images != null) {
+                        scr.info[0].images.map((img: any, img_i: number) => {
+                            console.log("img: ", img);
+                            
+                            mainImgs[img_i] = img
+                        })
+                    }
+                    mainImagesSet(mainImgs)
+                } else {
+
+                    let newScreen = {
+                        titles: [] as any,
+                        texts: [] as any,
+                        images: [] as any
+                    }
+                    if (scr.info != null && scr.info.length > 0) {
+                        scr.info.map((information: any, scr_i: number) => {
+
+                        console.log(scr);
+                            // let newScreen = emptyScreen
+                            newScreen.titles.push(information.title)
+                            newScreen.texts.push(information.text)
+                            let newImg = ['','','']
+                            information.images.map((image: any, i_i: number) => {
+                                newImg[i_i] = image
+                            })
+                            newScreen.images.push(newImg)
+
+    
+                        })
+                        console.log('new ',newScreen);
+                        screenArr[i - 1] = newScreen
+                    }
+                }
+              })
+              console.log("screenarr ",screenArr);
+              screensSet(screenArr)
+              console.log("FIRING")
+      
+            //   screensArrSet(response.screens)
+            //   screenCountSet(response.screens.length)
+              
+
+            })
+            .catch(error=>{console.log(error)})
         }
     })
+
+    let maimImagesChanged = (link: any, i: number) => {
+        let newArr = [...mainImages]
+        newArr[i] = link
+        mainImagesSet(newArr)
+    }
 
     let makeVisisble = (className: string) => {
         let divClass = document.querySelector("." + className)
@@ -65,12 +139,6 @@ function CreateRestPage() {
           divClass.className += " invisible"
         }
       }
-
-    let maimImagesChanged = (link: any, i: number) => {
-        let newArr = [...mainImages]
-        newArr[i] = link
-        mainImagesSet(newArr)
-    }
 
     let setScreen = (scr: any, i: number) => {
         let newArr = [...screens]
@@ -148,7 +216,7 @@ function CreateRestPage() {
             }
             isEmpty = true
         }
-        if (restaurantId.length == 0) {
+        if (restaurantID.length == 0) {
             let idInput = document.querySelector(".newRestIdInput")
             if (idInput != null) {
                 idInput.className += " invalid"
@@ -161,7 +229,7 @@ function CreateRestPage() {
         
             fetch("https://restapp.onrender.com/restaurant", {
                 method: "POST",
-                body: JSON.stringify({restaurant_id: restaurantId}),
+                body: JSON.stringify({restaurant_id: restaurantID}),
                 headers: {
                   'Accept': 'application/json',
                   'Content-Type': 'application/json'
@@ -256,7 +324,6 @@ function CreateRestPage() {
               // let wh = response.restaurant.working_hours
               // workingHoursSet(wh.split("\n"))
             })
-            .catch(error=>{console.log(error)})
     }
 
     let openHelp = () => {
@@ -264,6 +331,7 @@ function CreateRestPage() {
         if (window != null) {
             window.style.display = "block"
         }
+        console.log("screens ", screens)
     }
 
     let closeHelp = () => {
@@ -278,11 +346,11 @@ function CreateRestPage() {
         <TopHolderBasic />
         <div className="createdSuccesfullyBlock invisible">
             <div className="successText">
-              Ресторан успешно создан!
+              Изменения успешно сохранены!
             </div>
         </div>
         <div className="helpIconBlock">
-        <div className="titleText">СОЗДАНИЕ РЕСТОРАНА</div>
+            <div className="titleText">РЕДАКТИРОВАНИЕ РЕСТОРАНА</div>
                 <button className="helpButton" onClick={openHelp}>?</button>
         </div>
         <div id="helpWindow" className="helpWindow" onClick={e => {
@@ -329,10 +397,10 @@ function CreateRestPage() {
                 <div className="createRestId">
                     <div className="createRestTextBlock">ID ресторана:</div>
                     <div className="IdInputBlock">
-                        <input className="newRestIdInput" type="text" maxLength={30} value={restaurantId}
+                        <input className="newRestIdInput" type="text" maxLength={30} value={restaurantID}
                                 onChange={e => {
                                     let val = e.target.value.replace(/[^A-Za-z0-9]/ig, '')
-                                    restaurantIdSet(val)}} 
+                                    restaurantIDSet(val)}} 
                                 onClick={idInputClicked} />
                         <div className="smallTextBlock Error invisible">ресторан с таким ID уже существует!</div>
                         <div className="smallTextBlock IDinfo">будет отображаться в ссылке</div>
@@ -341,12 +409,12 @@ function CreateRestPage() {
                 <div className="createRestAddress">
                     <div className="createRestTextBlock">Адрес ресторана:</div>
                     <input className="newRestAddressInput" type="text" maxLength={500} value={address}
-                                onChange={e => addressSet(e.target.value)} />
+                                onChange={e => addressSet(e.target.value.replace(/[^A-Za-z0-9?.,!-\s]/ig, ''))} />
                 </div>
                 <div className="createRestContacts">
                     <div className="createRestTextBlock">Контакты ресторана:</div>
                     <input className="newRestContactsInput" type="text" maxLength={500} value={contacts}
-                                onChange={e => contactsSet(e.target.value)} />
+                                onChange={e => contactsSet(e.target.value.replace(/[^A-Za-z0-9?.,:;!@_+-\s]/ig, ''))} />
                 </div>
                 <div className="createRestWH">
                     <div className="createRestTextBlock">Часы работы:</div>
@@ -405,7 +473,7 @@ function CreateRestPage() {
                 </div>
             </div>
             {scrIndex >= 0 &&
-            <div className="triangleBlock" style={{marginTop: `${480 + (scrIndex >= 0 ? scrIndex * 50 : 0)}px`}}>
+            <div className="triangleBlock" style={{marginTop: `${500 + (scrIndex >= 0 ? scrIndex * 50 : 0)}px`}}>
                 {/* <div className="verticalBorder"></div> */}
             </div>}
             {scrIndex >= 0 &&
@@ -414,10 +482,10 @@ function CreateRestPage() {
             }
         </div>
         <div className="createButtonHolder">
-            <button className='saveRestButton' onClick={createRestButtonClicked}>СОЗДАТЬ РЕСТОРАН</button>
+            <button className='saveRestButton' onClick={createRestButtonClicked}>СОХРАНИТЬ РЕСТОРАН</button>
         </div>
     </div>
   )
 }
 
-export default CreateRestPage
+export default EditRest

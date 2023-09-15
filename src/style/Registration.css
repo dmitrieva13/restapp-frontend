@@ -1,4 +1,4 @@
-.EmployeeLoginPage, .userLoginPage {
+.userRegPage {
     width: 100vw;
     height: 100vh;
     text-align: center;
@@ -23,7 +23,7 @@ input[type=text] {
     border-color: red;
   }
 
-  button {
+  /* button {
     background-color: white;
     width: fit-content;
     border: 1px solid;
@@ -37,9 +37,9 @@ input[type=text] {
 
   button:hover {
     box-shadow: 0px 0px 3px 3px rgba(90, 90, 90, 0.15);
-  }
+  } */
 
-  .EmployeeInputsBlock, .userInputsBlock {
+  .userInputsBlock {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -48,14 +48,13 @@ input[type=text] {
     padding-top: 30px;
   }
 
-  .loginTitle {
+  .regTitle {
     width: 100%;
     padding-top: 150px;
     font-size: 20px;
   }
 
-  .EmployeeEmaiInputBlock, .EmployeePasswordInputBlock, .userEmaiInputBlock,
-  .userPasswordInputBlock {
+  .userEmaiInputBlock, .userPasswordInputBlock, .userPasswordCheckInputBlock {
     margin: auto;
     width: 500px;
     max-width: 90%;
@@ -81,12 +80,17 @@ input[type=text] {
     font-weight: lighter;
   }
 
-  .toRegistrationButton {
+  .toLoginButton {
     color: rgb(100, 100, 100);
     border: none;
     font-style: italic;
   }
 
-  .toRegistrationButton:hover {
+  .toLoginButton:hover {
     box-shadow: none;
+  }
+
+  .userRegTextBlock {
+    width: 200px;
+    text-align: left;
   }

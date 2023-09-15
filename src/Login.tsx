@@ -15,6 +15,10 @@ function Login() {
         navigate("/elogin")
     }
 
+    let goToRegistration = () => {
+      navigate("/registration")
+  }
+
     let setError = (inputName: string) => {
         let input = document.querySelector("."+inputName)
         // console.log(input)
@@ -121,7 +125,9 @@ function Login() {
                 <button className='loginButton' onClick={login}>ВОЙТИ</button>
                 
             </div>
-            {/* <h1 onClick={goToElogin}>войти как работник</h1> */}
+            <div className="toRegBlock">
+              <button className='toRegistrationButton' onClick={goToRegistration}>Нет аккаунта? Зарегистрироваться</button>
+            </div>
             <div className="toEmployeeBlock">
                 <button className='toEmployeeButton' onClick={goToElogin}>ВОЙТИ КАК РАБОТНИК</button>
             </div>

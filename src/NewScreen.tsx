@@ -20,7 +20,7 @@ function NewScreen(props: {screenIndex: any, infos: any, infosChange: any}) {
         let savedInfo = {
             titles: [] as any[5],
             texts: [] as any[5],
-            imgs: [] as any[5]
+            images: [] as any[5]
         }
         let newArr = [...imgArr]
         newArr[index] = currentImgArr
@@ -33,14 +33,14 @@ function NewScreen(props: {screenIndex: any, infos: any, infosChange: any}) {
                 console.log(newArr[i])
                 savedInfo.titles[count] = title
                 savedInfo.texts[count] = textArr[i]
-                savedInfo.imgs[count] = newArr[i]
+                savedInfo.images[count] = newArr[i]
                 count++
             }
         })
         for (let i = count; i < 5; i++) {
             savedInfo.titles[i] = ""
             savedInfo.texts[i] = ""
-            savedInfo.imgs[i] = []
+            savedInfo.images[i] = []
         }
         props.infosChange(savedInfo, props.screenIndex)
         console.log("saved ",savedInfo)
@@ -77,17 +77,17 @@ function NewScreen(props: {screenIndex: any, infos: any, infosChange: any}) {
         })
     }
 
-    let resetAddedInputs = () => {
-        let titleDivs = Array.from(document.querySelectorAll(".newTitle"))
-        titleDivs.map((tDiv: any, i: number) => {
-            if (tDiv.id == '0') {
-                tDiv.className = "newTitle"
-            } else {
-                tDiv.className = "newTitle invisible"
-            }
-        })
-        titlesVisibleSet(1)
-    }
+    // let resetAddedInputs = () => {
+    //     let titleDivs = Array.from(document.querySelectorAll(".newTitle"))
+    //     titleDivs.map((tDiv: any, i: number) => {
+    //         if (tDiv.id == '0') {
+    //             tDiv.className = "newTitle"
+    //         } else {
+    //             tDiv.className = "newTitle invisible"
+    //         }
+    //     })
+    //     titlesVisibleSet(1)
+    // }
 
     let newTitleButtonClicked = () => {
         let titlesCount = titlesVisible + 1
@@ -142,12 +142,12 @@ function NewScreen(props: {screenIndex: any, infos: any, infosChange: any}) {
         console.log(loaded, props.screenIndex)
         if (loaded != props.screenIndex) {
             clearInputs()
-            resetAddedInputs()
+            // resetAddedInputs()
             console.log("got info: ",props.infos);
             
             let titlesArr = ["","","","",""]
             let textsArr = ["","","","",""]
-            let linksArr = [[],[],[],[],[]]
+            let linksArr = [[],[],[],[],[]] as any[5]
             let ciArr = ["","",""]
             initTitlesCountSet(1)
             let count = 0
@@ -155,7 +155,11 @@ function NewScreen(props: {screenIndex: any, infos: any, infosChange: any}) {
                 for (let i = 0; i < props.infos?.titles.length; i++) {
                     titlesArr[i] = props.infos?.titles[i]
                     textsArr[i]= props.infos?.texts[i]
-                    linksArr[i] = props.infos?.imgs[i]
+                    let newImages = ["","",""]
+                    props.infos?.images[i].map((img: string, j: number) => {
+                        newImages[j] = img
+                    })
+                    linksArr[i] = newImages
                     if (props.infos?.titles[i] != '') {
                         count++
                     }
@@ -165,6 +169,7 @@ function NewScreen(props: {screenIndex: any, infos: any, infosChange: any}) {
                 })
                 console.log("count:", count);
                 initTitlesCountSet(count)
+                titlesVisibleSet(count)
                 
             }
             titlesSet(titlesArr)
