@@ -126,7 +126,7 @@ function User() {
                  : ''}
             </div>
             <div className="userBonuses">
-                {bonuses.length > 0 ? bonuses + " бонусов" : ''}
+                {bonuses.length > 0 ? "На вашем счету " + bonuses + " бонусов" : ''}
             </div>
             <div className="userButtons">
                 <button className='userButton takeOrder'>

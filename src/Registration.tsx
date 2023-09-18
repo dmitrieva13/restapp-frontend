@@ -55,45 +55,50 @@ function Registration() {
       }
 
     let registration = () => {
-        fetch("https://restapp.onrender.com/login", {
-              method: "POST",
-              body: JSON.stringify({
-                    email: username,
-                    password: password
-                }),
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              }
-          }
-          ).then(res=>res.json())
-          .then(response=>{
-            console.log("AA")
-            console.log(response)
-            if(!response?.user){
-                console.log("CASA BONITA")
-                errorSet(response.message)
-                setError("userUsernameInput")
-                setError("userPasswordInput")
-                makeVisisble("loginError")
-                // setTimeout(function(){
-                // makeInvisisble("loginError")
-                // }, 10000)
-            } else {
-                let decode : {restaurant_id: string, role: string, email: string} 
-                    = jwt_decode(response.user.accessToken)
-                console.log(decode)
-                localStorage.setItem("accessToken", response.user.accessToken)
-                localStorage.setItem("refreshToken", response.user.refreshToken)
-                localStorage.setItem("restaurant", decode.restaurant_id)
-                localStorage.setItem("role", decode.role)
-                localStorage.setItem("username", decode.email)
-                window.location.replace("/")
-            }
-          })
-          .catch(er=>{
-            console.log(er.message)
-        })
+        // fetch("https://restapp.onrender.com/login", {
+        //       method: "POST",
+        //       body: JSON.stringify({
+        //             email: username,
+        //             password: password
+        //         }),
+        //       headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //       }
+        //   }
+        //   ).then(res=>res.json())
+        //   .then(response=>{
+        //     console.log("AA")
+        //     console.log(response)
+        //     if(!response?.user){
+        //         console.log("CASA BONITA")
+        //         errorSet(response.message)
+        //         setError("userUsernameInput")
+        //         setError("userPasswordInput")
+        //         makeVisisble("loginError")
+        //         // setTimeout(function(){
+        //         // makeInvisisble("loginError")
+        //         // }, 10000)
+        //     } else {
+        //         let decode : {restaurant_id: string, role: string, email: string} 
+        //             = jwt_decode(response.user.accessToken)
+        //         console.log(decode)
+        //         localStorage.setItem("accessToken", response.user.accessToken)
+        //         localStorage.setItem("refreshToken", response.user.refreshToken)
+        //         localStorage.setItem("restaurant", decode.restaurant_id)
+        //         localStorage.setItem("role", decode.role)
+        //         localStorage.setItem("username", decode.email)
+        //         navigate("/")
+        //     }
+        //   })
+        //   .catch(er=>{
+        //     console.log(er.message)
+        // })
+        localStorage.setItem("username", username)
+        localStorage.setItem("role", "")
+        localStorage.setItem("restaurant", '')
+        localStorage.setItem("bonuses", "0")
+        navigate("/")
     }
 
     return(

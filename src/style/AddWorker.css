@@ -1,0 +1,69 @@
+.AddWorkerScreen {
+    width: 100vw;
+    height: 100vh;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.AddWorkerInputsBlock {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 25px;
+}
+
+.text {
+    width: 160px;
+    min-width: 160px;
+}
+
+.textInfo {
+    font-weight: bolder;
+    font-size: 18px;
+}
+
+.restaurantBlock, .roleBlock, .usernameBlock, .passwordCheckBlock, .passwordBlock {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.titleBlock {
+    margin-top: 80px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.selection {
+    width: 200px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 14px;
+    border-color: black;
+    border-radius: 10px;
+    height: 22px;
+    padding-left: 8px;
+}
+
+.passwordCheckInputBlock {
+    width: 100%;
+}
+
+.addWorkerError {
+    color: red;
+    font-weight: lighter;
+}
+
+.buttonBlock {
+    width: 100%;
+    text-align: center;
+}
+
+.addButton {
+    margin-top: 50px;
+}
+
+.invisible {
+    display: none;
+  }

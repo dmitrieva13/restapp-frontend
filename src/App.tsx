@@ -11,6 +11,7 @@ import Login from './Login'
 import TakeOrder from './TakeOrder'
 import Registration from './Registration'
 import EditRest from './EditRest'
+import AddWorker from './AddWorker'
 
 const App = () => {
   return(
@@ -24,6 +25,7 @@ const App = () => {
         <Route path='/:restaurantId' element={<Restaurant/>}/>
         <Route path='/order' element={<TakeOrder/>}/>
         <Route path='/edit/:restaurantId' element={<EditRest />}/>
+        <Route path='/addworker' element={<AddWorker />}/>
     </Routes>
   )
 }

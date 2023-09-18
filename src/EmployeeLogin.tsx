@@ -73,7 +73,7 @@ function EmployeeLogin() {
                 localStorage.setItem("restaurant", decode.restaurant_id)
                 localStorage.setItem("role", decode.role)
                 localStorage.setItem("username", decode.email)
-                // window.location.replace("/")
+                navigate("/")
             }
           })
           .catch(er=>{
