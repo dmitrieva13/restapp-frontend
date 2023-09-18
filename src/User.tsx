@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './style/User.css'
 import TopHolderUser from './TopHolderUser'
+import LoadingPage from './LoadingPage'
 
 function User() {
     const [fetched, fetchedSet] = useState(0)
@@ -105,6 +106,7 @@ function User() {
         }
     )
     
+    if (fetched) {
     return(
         <div className="userPage">
             <TopHolderUser />
@@ -145,6 +147,11 @@ function User() {
             </div>
         </div>
     )
+    } else {
+        return(
+            <LoadingPage />
+        )
+    }
 }
 
 export default User

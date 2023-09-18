@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import './style/CreateRestPage.css'
 import NewScreen from './NewScreen'
 import TopHolderBasic from './TopHolderBasic'
+import LoadingPage from './LoadingPage'
 
 function EditRest() {
   const navigate = useNavigate()
@@ -343,6 +344,7 @@ function EditRest() {
         }
     }
 
+    if (fetched) {
   return (
     <div className='CreateRest'>
         <TopHolderBasic />
@@ -488,6 +490,11 @@ function EditRest() {
         </div>
     </div>
   )
+        } else {
+            return(
+                <LoadingPage />
+            )
+        }
 }
 
 export default EditRest

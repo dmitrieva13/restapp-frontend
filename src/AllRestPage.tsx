@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import './style/AllRestPage.css'
 import TopHolderAll from './TopHolderAllRests'
 import RestaurantDisplay from './RestaurantDisplay'
+import LoadingPage from './LoadingPage'
 
 function AllResturants() {
     const [fetched, fetchedSet] = useState(0)
@@ -41,6 +42,7 @@ let restArr = [
 }
 ]
 
+    if(fetched){
     return(
         <div className="AllRestPage">
             <TopHolderAll name={localStorage.getItem("username") || ""} />
@@ -56,7 +58,11 @@ let restArr = [
                 })}
             </div>
         </div>
-    )
+    )   
+    } else {
+        return(
+        <LoadingPage />
+        )
+  }
 }
-
 export default AllResturants
