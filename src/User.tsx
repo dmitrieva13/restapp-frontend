@@ -27,12 +27,16 @@ function User() {
 
     const navigate = useNavigate()
 
-    let goToRestaurantCreate = () => {
-        navigate("/create_rest")
+    let goToRestaurantEdit = (rid: string) => {
+        navigate("/edit/" + rid)
     }
 
     let goToRestaurantPage = (id: string) => {
         navigate("/" + id)
+    }
+
+    let goToAddWorker = () => {
+        navigate("/addworker")
     }
 
     useEffect(() => {
@@ -88,8 +92,8 @@ function User() {
                     orderClass.className += " invisible"
                 }
             }
-            if (roleInfo.length == 0 || roleInfo != 'owner') {
-                let addRestClass = document.querySelector(".addRestaurant")
+            if (roleInfo.length == 0 || roleInfo != 'admin') {
+                let addRestClass = document.querySelector(".editRestaurant")
                 if (addRestClass != null) {
                     addRestClass.className += " invisible"
                 }
@@ -112,7 +116,7 @@ function User() {
             <div className="userJob">
                 {role.length > 0 ? 
                 <div className='jobInfo'>
-                    <div>{role} в ресторане(-ах): </div>
+                    <div>{role} в ресторане </div>
                     <div className="userRestaurantName" onClick={e => goToRestaurantPage(restId)}>
                         {restName}
                     </div>
@@ -132,10 +136,10 @@ function User() {
                 <button className='userButton takeOrder'>
                     ПРИНЯТЬ ЗАКАЗ
                 </button>
-                <button className='userButton addRestaurant' onClick={goToRestaurantCreate}>
-                    СОЗДАТЬ РЕСТОРАН
+                <button className='userButton editRestaurant' onClick={e => goToRestaurantEdit(restId)}>
+                    РЕДАКТИРОВАТЬ РЕСТОРАН
                 </button>
-                <button className='userButton addWorker'>
+                <button className='userButton addWorker' onClick={goToAddWorker}>
                     ДОБАВИТЬ РАБОТНИКА
                 </button>
             </div>
