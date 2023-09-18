@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './style/CreateRestPage.css'
 import NewScreen from './NewScreen'
 import TopHolderBasic from './TopHolderBasic'
 
 function CreateRestPage() {
-//   const navigate = useNavigate()
+  const navigate = useNavigate()
 
 //   let goToUser = () => {
 //       navigate("/user/" + props.name)
@@ -248,6 +249,7 @@ function CreateRestPage() {
                 makeVisisble("createButtonHolder")
                 makeInvisisble("createdSuccesfullyBlock")
                 }, 2000)
+                navigate("/")
               }
               // addessSet(response.restaurant.address)
               // contactsSet(response.restaurant.contacts)

@@ -102,8 +102,8 @@ function AddWorker() {
             </div>
         </div>
         <div className="AddWorkerInputsBlock">
-            <div className="titleBlock">
-                <div className="title">ДОБАВЛЕНИЕ РАБОТНИКА</div>
+            <div className="addWorkerTitleBlock">
+                <div className="addWorkerTitle">ДОБАВЛЕНИЕ РАБОТНИКА</div>
             </div>
             <div className="restaurantBlock">
                 <div className="text">ID ресторана:</div>

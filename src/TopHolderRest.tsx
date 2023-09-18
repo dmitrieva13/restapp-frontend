@@ -29,7 +29,10 @@ if (props.user) {
               {props.name}
           </div>
 
+          {
+            localStorage.role == 'admin' && localStorage.restaurant == props.id && 
           <button className="editButton" onClick={goToEdit}>редактировать ресторан</button>
+          }
         </div>
         <div className="userRest" onClick={goToUser}>{props.user}</div>
     </div>

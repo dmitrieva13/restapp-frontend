@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import './style/CreateRestPage.css'
 import NewScreen from './NewScreen'
-import TopHolderBasic from './TopHolderBasic';
+import TopHolderBasic from './TopHolderBasic'
 
 function EditRest() {
-//   const navigate = useNavigate()
+  const navigate = useNavigate()
 
 //   let goToUser = () => {
 //       navigate("/user/" + props.name)
@@ -22,7 +23,7 @@ function EditRest() {
         images: [] as any
     }
 
-    let { restaurantId } = useParams();
+    const { restaurantId } = useParams();
 
     const [restaurantName, restaurantNameSet] = useState("")
     const [restaurantID, restaurantIDSet] = useState("")
@@ -237,8 +238,8 @@ function EditRest() {
             }
             ).then(res=>res.json())
             .then(response=>{
-              console.log(!response)
-              if (response.name) {
+              console.log(response)
+              if (restaurantID != restaurantId && response) {
                 let idInput = document.querySelector(".newRestIdInput")
                 if (idInput != null) {
                     idInput.className += " invalid"
@@ -312,10 +313,11 @@ function EditRest() {
                 makeInvisisble("createButtonHolder")
                 makeVisisble("createdSuccesfullyBlock")
                 setTimeout(function(){
-                makeVisisble("CreateRestPage")
-                makeVisisble("createButtonHolder")
-                makeInvisisble("createdSuccesfullyBlock")
+                    makeVisisble("CreateRestPage")
+                    makeVisisble("createButtonHolder")
+                    makeInvisisble("createdSuccesfullyBlock")
                 }, 2000)
+                navigate("/")
               }
               // addessSet(response.restaurant.address)
               // contactsSet(response.restaurant.contacts)
