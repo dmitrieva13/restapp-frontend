@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import jwt_decode from "jwt-decode"
 import './style/Registration.css'
+import TopHolderLogin from './TopHolderLogin'
 
 function Registration() {
     const [username, usernameSet] = useState("")
@@ -103,6 +104,7 @@ function Registration() {
 
     return(
         <div className="userRegPage">
+            <TopHolderLogin />
             <div className="regTitle">
                 ЗАРЕГИСТРИРОВАТЬСЯ
             </div>

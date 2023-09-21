@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import jwt_decode from "jwt-decode"
 import './style/Login.css'
-
+import TopHolderLogin from './TopHolderLogin'
 
 function EmployeeLogin() {
     const navigate = useNavigate()
@@ -83,6 +83,7 @@ function EmployeeLogin() {
 
     return(
         <div className="EmployeeLoginPage">
+          <TopHolderLogin />
             <div className="loginTitle">
                 ВОЙТИ В РАБОЧИЙ АККАУНТ
             </div>

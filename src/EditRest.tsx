@@ -57,6 +57,7 @@ function EditRest() {
             .then(response=>{
       
               fetchedSet(1)
+            screensVisibleSet(1)
               restaurantNameSet(response.name)
               restaurantIDSet(restaurantId != null ? restaurantId : "")
               addressSet(response.address)
@@ -69,6 +70,7 @@ function EditRest() {
               })
               workingHoursSet(whFormatted)
               
+              let scrCount = 0
               let mainImgs = ['','','']
               let screenArr = [emptyScreen,emptyScreen,emptyScreen,emptyScreen,emptyScreen]
               response.screens.map((scr: any, i: number) => {
@@ -106,11 +108,16 @@ function EditRest() {
                         })
                         console.log('new ',newScreen);
                         screenArr[i - 1] = newScreen
+                        scrCount++
                     }
                 }
               })
               console.log("screenarr ",screenArr);
               screensSet(screenArr)
+              screensVisibleSet(scrCount)
+              if (scrCount == 5) {
+                makeInvisisble("newScreenButton")
+              }
               console.log("FIRING")
       
             //   screensArrSet(response.screens)
@@ -123,6 +130,8 @@ function EditRest() {
     })
 
     let maimImagesChanged = (link: any, i: number) => {
+        console.log("main change");
+        
         let newArr = [...mainImages]
         newArr[i] = link
         mainImagesSet(newArr)
@@ -165,6 +174,8 @@ function EditRest() {
         scrIndexSet(i)
         colorScreen(i)
         console.log("screens: ", screens)
+        console.log("current main: ", mainImages);
+        
     }
 
     let idInputClicked = () => {
@@ -201,10 +212,11 @@ function EditRest() {
             }
         })
         if (screensCount >= 5){
-            let buttonDiv = document.querySelector(".newScreenButton")
-            if (buttonDiv != null) {
-                buttonDiv.className += " invisible"
-            }
+            // let buttonDiv = document.querySelector(".newScreenButton")
+            // if (buttonDiv != null) {
+            //     buttonDiv.className += " invisible"
+            // }
+            makeInvisisble("newScreenButton")
         }
         selectScreen(screensCount - 1)
     }
@@ -313,12 +325,14 @@ function EditRest() {
                 makeInvisisble("CreateRestPage")
                 makeInvisisble("createButtonHolder")
                 makeVisisble("createdSuccesfullyBlock")
+                makeInvisisble("CreateRestPage")
+                makeInvisisble("createButtonHolder")
+                makeInvisisble("helpIconBlock")
+                makeVisisble("createdSuccesfullyBlock")
+                
                 setTimeout(function(){
-                    makeVisisble("CreateRestPage")
-                    makeVisisble("createButtonHolder")
-                    makeInvisisble("createdSuccesfullyBlock")
+                    navigate("/")
                 }, 2000)
-                navigate("/")
               }
               // addessSet(response.restaurant.address)
               // contactsSet(response.restaurant.contacts)
@@ -448,13 +462,13 @@ function EditRest() {
                     <div className="mainImages">
             {/* <input className="newTextInput" type="text" maxLength={2000} value={textArr[index]}
                     onChange={e => changeText(e.target.value, index)} /> */}
-                <input className="newImageInput" id="0" maxLength={200}
+                <input className="mainImageInput" id="0" maxLength={200}
                     value={mainImages[0]} type="text"
                     onChange={e => maimImagesChanged(e.target.value, 0)}/>
-                    <input className="newImageInput" id="1" maxLength={200}
+                    <input className="mainImageInput" id="1" maxLength={200}
                     value={mainImages[1]} type="text"
                     onChange={e => maimImagesChanged(e.target.value, 1)}/>
-                    <input className="newImageInput" id="2" maxLength={200}
+                    <input className="mainImageInput" id="2" maxLength={200}
                     value={mainImages[2]} type="text"
                     onChange={e => maimImagesChanged(e.target.value, 2)}/>
             </div>
@@ -464,7 +478,7 @@ function EditRest() {
                     {screens.map((scr: any, i: number) => {
                         console.log(i)
                         let idStr = i.toString()
-                        let cname = i == 0 ? "createScreenText" : "createScreenText invisible"
+                        let cname = i < screensVisible ? "createScreenText" : "createScreenText invisible"
                         return(
                             <div className={cname} key={i} id={idStr}
                             style={{color: `${colors[i]}`}}
@@ -482,11 +496,11 @@ function EditRest() {
             </div>}
             {scrIndex >= 0 &&
             <NewScreen screenIndex={scrIndex} infos={screens[scrIndex]} 
-            infosChange={setScreen}/>
+            infosChange={setScreen} />
             }
         </div>
         <div className="createButtonHolder">
-            <button className='saveRestButton' onClick={createRestButtonClicked}>СОХРАНИТЬ РЕСТОРАН</button>
+            <button className='saveRestButton' onClick={createRestButtonClicked}>ВНЕСТИ ИЗМЕНЕНИЯ</button>
         </div>
     </div>
   )

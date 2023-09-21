@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import './style/TakeOrder.css'
+import TopHolderBasic from './TopHolderBasic'
 
 function TakeOrder() {
     const [loaded, loadedSet] = useState(0)
@@ -118,8 +119,17 @@ function TakeOrder() {
 
     return (
         <div className='takeOrderPage'>
+            <TopHolderBasic />
             <div className="orderTitle">Принятие заказа</div>
             <div className="orderInputs">
+            <div className="orderWaiterBlock">
+                <div className="text">Официант:</div>
+                <div className="textInfo">{localStorage.username || ""}</div>
+            </div>
+                <div className="orderRestaurantBlock">
+                    <div className="text">ID ресторана:</div>
+                    <div className="textInfo">{localStorage.restaurant || ""}</div>
+                </div>
                 <div className="usernameInputBlock">
                     <div className="orderTextBlock">Имя пользователя:</div>
                     <div className="wrappedInput">

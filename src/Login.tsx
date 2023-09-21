@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import jwt_decode from "jwt-decode"
 import './style/Login.css'
-
+import TopHolderLogin from './TopHolderLogin'
 
 function Login() {
     const [username, usernameSet] = useState("")
@@ -91,6 +91,7 @@ function Login() {
 
     return(
         <div className="userLoginPage">
+          <TopHolderLogin />
             <div className="loginTitle">
                 ВОЙТИ В АККАУНТ
             </div>
