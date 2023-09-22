@@ -95,6 +95,22 @@ function Registration() {
         //   .catch(er=>{
         //     console.log(er.message)
         // })
+        if (username.length == 0) {
+          setError("userUsernameInput")
+          errorSet('Имя пользователя не может быть пустым')
+          return
+      }
+      if (password.length == 0) {
+          setError("userPasswordInput")
+          errorSet('Пароль не может быть пустым')
+          return
+      }
+      if (password != passwordCheck) {
+          setError("userPasswordInput")
+          setError("userPasswordCheckInput")
+          errorSet('Пароли не совпадают')
+          return
+      }
         localStorage.setItem("username", username)
         localStorage.setItem("role", "")
         localStorage.setItem("restaurant", '')

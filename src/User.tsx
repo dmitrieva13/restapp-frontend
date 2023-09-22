@@ -106,7 +106,7 @@ function User() {
         }
     )
     
-    if (fetched) {
+    if (fetched || role.length == 0) {
     return(
         <div className="userPage">
             <TopHolderUser />
