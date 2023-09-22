@@ -11,6 +11,7 @@ function User() {
     const [restId, restIdSet] = useState("")
     const [restName, restNameSet] = useState("")
     const [bonuses, bonusesSet] = useState("")
+    const [employeesList, employeesListSet] = useState<any[]>([])
 
     // let userData = {
     //     username: 'michaelis',
@@ -79,6 +80,33 @@ function User() {
                       // workingHoursSet(wh.split("\n"))
                     })
                     .catch(error=>{console.log(error)})
+
+                    if (roleInfo == "admin") {
+                    fetch("https://restapp.onrender.com/show_employees", {
+                        method: "POST",
+                        body: JSON.stringify({
+                            restaurant_id: id,
+                            access_token: localStorage.getItem('accessToken'),
+                            refresh_token: localStorage.getItem('refreshToken'),
+                        }),
+                        headers: {
+                          'Accept': 'application/json',
+                          'Content-Type': 'application/json'
+                        }
+                    }
+                    ).then(res=>res.json())
+                    .then(response=>{
+              
+              
+                      console.log(response)
+
+                      localStorage.setItem('accessToken', response.user.access_token)
+                      localStorage.setItem('refreshToken', response.user.refresh_token)
+                      
+                      employeesListSet(response.employees)
+                    })
+                    .catch(error=>{console.log(error)})
+                }
                 }
             }
             if (bonusesInfo.length == 0) {
@@ -144,6 +172,38 @@ function User() {
                 <button className='userButton addWorker' onClick={goToAddWorker}>
                     ДОБАВИТЬ РАБОТНИКА
                 </button>
+            </div>
+            <div className='employees'>
+                <div className='employeesBlock'>
+                    {
+                        employeesList.length > 0 && 
+                        <div>
+                            <div className="employeeText Title">Список сотрудников ресторана {restName}</div>
+                            <div className="employeeInfoBlock">
+                                <div className="employeeText Bold">Имя сотрудника:</div>
+                                <div className="employeeText Bold">Имя пользователя:</div>
+                                <div className="employeeText Bold">Роль:</div>
+                            </div>
+                        </div>
+                    }
+                    {
+                        employeesList.map((employee, i) => {
+                            return(
+                                <div key={i} className='employeeInfoBlock'>
+                                    <div className='employeeText'>
+                                        {employee.name}
+                                    </div>
+                                    <div className='employeeText'>
+                                        {employee.email}
+                                    </div>
+                                    <div className='employeeText'>
+                                        {employee.role}
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
             </div>
         </div>
     )
